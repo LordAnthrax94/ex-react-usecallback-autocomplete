@@ -1,0 +1,17 @@
+*{margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.results{  
+  background-color: lightgrey;
+  margin-top: 10px;
+  border-radius: 1rem;
+  overflow: auto;
+  max-height: 60vh;
+  max-width: 60vh;
+}
+
+.results p{
+  padding: 10px;
+}
