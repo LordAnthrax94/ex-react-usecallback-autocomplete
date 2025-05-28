@@ -1,4 +1,14 @@
-import{ useState, useEffect } from 'react';
+const debounce = (callback, delay) =>{
+  let timeout;
+  return value => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      callback(value);
+    }, delay);
+  };
+};
+
+import{ useState, useEffect, useCallback } from 'react';
 
 function App() {
   
@@ -6,16 +16,24 @@ function App() {
   const [products, setProducts] = useState([]);
   console.log(products);
   
-
-   useEffect(() => {
-    if(!query.trim()){
+  const fetchProducts = async (query) => {
+  if(!query.trim()){
       setProducts([]);
       return;
     }
-    fetch(`http://localhost:3333/products?search=${query}`)
-    .then(res => res.json())
-    .then(data => setProducts(data))
-    .catch(error => console.error(error));
+    try{
+      const res = await fetch(`http://localhost:3333/products?search=${query}`)
+      const data = await res.json();
+      setProducts(data);
+    }catch(error){
+      console.error(error)
+    };
+  }
+
+  const debouncedFetchProducts = useCallback(debounce(fetchProducts, 500), []);
+
+   useEffect(() => {
+    debouncedFetchProducts(query);
   }, [query]);
 
   return (
